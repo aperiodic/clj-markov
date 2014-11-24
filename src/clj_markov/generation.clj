@@ -9,10 +9,10 @@
       (let [antecedents (get chain state)
             weight-sum (reduce + (vals antecedents))
             selection (rand weight-sum)
-            [_ next-token] (reduce (fn [[position selected-token] [token occurrences]]
+            [_ next-token] (reduce (fn [[position selected-token] [token weight]]
                                      (if selected-token
                                        [-1 selected-token]
-                                       (let [position' (+ position occurrences)]
+                                       (let [position' (+ position weight)]
                                          (if (> position' selection)
                                            [-1 token]
                                            [position' nil]))))
