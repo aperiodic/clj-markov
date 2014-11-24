@@ -21,13 +21,27 @@
       (update-in [state token-kw] (fnil inc 0))
       (assoc ::state state'))))
 
+(def default-chain-length 2)
+
+(defn new-chain
+  ([] (new-chain default-chain-length))
+  ([length]
+   {::state (-> (repeat length nil) vec)}))
+
+(defn reset-chain
+  [chain]
+  (let [length (count (::state chain))]
+    (if (zero? length)
+      chain
+      (assoc chain ::state (repeat length nil)))))
+
 (def default-training-opts
-  {:length 2})
+  {:reset-state? true})
 
 (defn train
-  ([tokens] (train tokens {}))
-  ([tokens opts]
-   (let [{:keys [length]} (merge default-training-opts opts)
-         chain {::state (-> (repeat length nil) vec)}]
-     (-> (reduce train* chain tokens)
-       (dissoc ::state)))))
+  ([tokens] (train (new-chain) tokens))
+  ([chain tokens] (train chain tokens {}))
+  ([chain tokens opts]
+   (let [{:keys [reset-state?]} (merge default-training-opts opts)
+         chain' (if reset-state? (reset-chain chain) chain)]
+     (reduce train* chain' tokens))))

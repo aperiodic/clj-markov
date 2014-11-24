@@ -3,7 +3,7 @@
 
 (defn generate
   [chain amount]
-  (loop [state (rand-nth (keys chain)), out []]
+  (loop [state (rand-nth (keys (dissoc chain :clj-markov.training/state))), out []]
     (if (= (count out) amount)
       out
       (let [antecedents (get chain state)

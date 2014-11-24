@@ -11,11 +11,11 @@ In the repl, enter:
 (in-ns 'clj-markov.repl)
 ```
 
-In this namespace, three functions are referred:
+In this namespace, four functions are referred:
 
   * `tokenize-file`, which, given a path to a file, returns a sequence of the tokens in that file, which can be used to train a markov chain.
-  * `train`, which, given a sequence of tokens, returns a Markov chain trained on those tokens.
-    The default chain length is two, but this can be altered by passing a map with the `:length` key set to another positive integer as the second argument.
+  * `new-chain`, which generates a blank Markov chain of the given length (which defaults to two if not specified).
+  * `train`, which, given a Markov chain and a sequence of tokens, returns the chain after training on those tokens.
   * `generate`, which, given a Markov chain and a positive integer, produces that many tokens using the Markov chain.
 
 Typically, for a particular text, one will define a var that holds that text's tokens.
@@ -28,7 +28,7 @@ For example:
 Once the tokens are available, a Markov chain can be trained on them:
 
 ```clj
-(def sn-2-chain (train supernatural {:length 2}))
+(def sn-2-chain (train (new-chain 2) supernatural))
 ```
 
 Finally, output can be generated from the chain:
