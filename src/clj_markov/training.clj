@@ -1,4 +1,5 @@
-(ns clj-markov.training)
+(ns clj-markov.training
+  (:require [clj-markov.tokenization :refer [tokenize-file]]))
 
 (defn shift-and-append
   [state token]
@@ -47,6 +48,12 @@
          chain' (if reset-state? (reset-chain chain) chain)]
      (reduce #(train* %1 %2 weight) chain' tokens))))
 
+(defn train-on-file
+  ([filename] (train-on-file filename default-chain-length))
+  ([filename length]
+   (let [tokens (tokenize-file filename)]
+     (train (new-chain length) tokens))))
+
 (defn train-on-corpuses
   ([corpuses] (train-on-corpuses corpuses default-chain-length))
   ([corpuses length]
@@ -57,3 +64,9 @@
      (reduce (fn [chain [corpus weight]] (train chain corpus {:weight weight}))
              (new-chain length)
              (map vector corpuses weights)))))
+
+(defn train-on-files
+  ([filenames] (train-on-files filenames default-chain-length))
+  ([filenames length]
+   (let [corpuses (map tokenize-file filenames)]
+     (train-on-corpuses corpuses length))))
