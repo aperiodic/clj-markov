@@ -1,5 +1,5 @@
 (ns clj-markov.repl
-  (:require [clj-markov.generation :refer [generate]]
+  (:require [clj-markov.generation :refer [generate generate-sentence]]
             [clj-markov.tokenization :refer [tokenize-file]]
             [clj-markov.training :refer [new-chain train train-on-corpuses]]))
 
@@ -50,5 +50,8 @@
   (-> (generate polychain 300)
     print-output!
     )
+
+  (-> (generate-sentence polychain)
+    print-output!)
 
   )

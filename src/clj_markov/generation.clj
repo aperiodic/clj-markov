@@ -26,3 +26,19 @@
    (:output (reduce (fn [sm _] (generate* sm chain))
                     {:state starting-state, :output []}
                     (range amount)))))
+
+(defn end-of-sentence-state?
+  [state]
+  (let [last-state-element (nth state (dec (count state)))]
+    (contains? #{:. :! :?} last-state-element)))
+
+(defn generate-sentence
+  [chain]
+  (let [states (keys (dissoc chain :clj-markov.training/state))
+        sentence-terminal-states (filter end-of-sentence-state? states)
+        s0 (first (shuffle sentence-terminal-states))]
+    (loop [state s0, out []]
+      (let [{out' :output, state' :state} (generate* {:state state, :output out} chain)]
+        (if (contains? #{"." "!" "?"} (last out))
+          out
+          (recur state' out'))))))

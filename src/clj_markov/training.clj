@@ -60,7 +60,6 @@
    (let [sizes (map count corpuses)
          total-size (reduce + sizes)
          weights (map #(/ (float total-size) %) sizes)]
-     (clojure.pprint/pprint weights)
      (reduce (fn [chain [corpus weight]] (train chain corpus {:weight weight}))
              (new-chain length)
              (map vector corpuses weights)))))
