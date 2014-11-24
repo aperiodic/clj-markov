@@ -3,15 +3,24 @@
             [clj-markov.tokenization :refer [tokenize-file]]
             [clj-markov.training :refer [new-chain train]]))
 
+(defn concat-token
+  "Add a new token to the output that will be shown to the user."
+  [output token]
+  (let [last-char (last output)
+        seperator (cond
+                    (contains? #{\newline \(} last-char) nil
+                    (contains? #{"." "!" "?" "," ";" ":" ")"} token) nil
+                    :else " ")
+        terminator (if (contains? #{"." "?" "!"} token)
+                     "\n"
+                     nil)]
+    (str output seperator token terminator)))
+
 (defn print-output!
   "Obviously needs some work, as currently all whitespace is destroyed in the
   tokenization process."
   [chain-output]
-  (println (reduce #(case %2 
-                      "." (str %1 %2 "\n") 
-                      (",",";",":",")") (str %1 %2) 
-                      (str %1 " " %2)) 
-                      chain-output)))
+  (println (reduce concat-token chain-output)))
 
 (defn supernatural-summaries [] (tokenize-file "texts/supernatural.txt"))
 
