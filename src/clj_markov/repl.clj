@@ -1,7 +1,7 @@
 (ns clj-markov.repl
   (:require [clj-markov.generation :refer [generate]]
             [clj-markov.tokenization :refer [tokenize-file]]
-            [clj-markov.training :refer [new-chain train]]))
+            [clj-markov.training :refer [new-chain train train-on-corpuses]]))
 
 (defn concat-token
   "Add a new token to the output that will be shown to the user."
@@ -39,4 +39,16 @@
   (def supernatural-chain (two-chain (supernatural-summaries)))
   (-> (generate supernatural-chain 140)
     print-output!)
+
+  (def sn (tokenize-file "texts/supernatural.txt"))
+  (def ks (tokenize-file "texts/kama-sutra.txt"))
+  (def md (tokenize-file "texts/moby-dick.txt"))
+
+  (def polychain
+    (train-on-corpuses [sn ks md]))
+
+  (-> (generate polychain 300)
+    print-output!
+    )
+
   )
