@@ -76,6 +76,19 @@
     (testing "tokenizes em-dashes seperately"
       (let [input "this--surely not unusual--construction should be allowed"]
         (is (= ["this" "--" "surely" "not" "unusual" "--" "construction" "should" "be" "allowed"]
+               (tokenize input))))
+      (let [input "and---though with longer dashes---this one"]
+        (is (= ["and" "---" "though" "with" "longer" "dashes" "---" "this" "one"]
+               (tokenize input)))))
+
+    (testing "tokenizes consecutive punctuation marks after a word without emitting a nil token"
+      (let [input "foo',`!"]
+        (is (= ["foo" "'" "," "`" "!"]
+               (tokenize input)))))
+
+    (testing "tokenizes standalone long dashes as a single token"
+      (let [input "foo --- bar"]
+        (is (= ["foo" "---" "bar"]
                (tokenize input)))))
 
     (testing "doesn't tokenize an apostrophe within a word as punctuation"

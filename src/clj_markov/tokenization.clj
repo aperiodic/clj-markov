@@ -65,6 +65,7 @@
 (def ^:private token-machine
   (fsm-seq
     [[:whitespace
+      \- -> {:action add-to-token} :em-dash-end-or-running-dash
       word-character -> {:action add-to-token} :word
       punctuation -> {:emit char-as-token} :whitespace
       _ -> :whitespace]
@@ -72,23 +73,26 @@
       \' -> {:action add-to-token} :apostrophe-in-word
       \- -> {:action add-to-token} :word-or-em-dash-start
       word-character -> {:action add-to-token} :word
-      whitespace -> {:emit current-token, :action reset-token} :whitespace
       punctuation -> {:emit current-token, :action reset-token-with-input} :punctuation
       _ -> {:emit current-token, :action reset-token} :whitespace]
      [:apostrophe-in-word
       word-character -> {:action add-to-token} :word
-      punctuation -> {:emit word-and-apostrophe, :action reset-token} :punctuation
+      punctuation -> {:emit word-and-apostrophe, :action reset-token-with-input} :punctuation
       _ -> {:emit word-and-apostrophe, :action reset-token} :whitespace]
      [:word-or-em-dash-start
-      \- -> {:emit word-and-dash, :action reset-token} :whitespace
+      \- -> {:action add-to-token} :em-dash-end-or-running-dash
       word-character -> {:action add-to-token} :word
       punctuation -> {:emit current-token, :action reset-token} :punctuation
       _ -> {:emit current-token, :action reset-token} :whitespace]
+     [:em-dash-end-or-running-dash
+      \- -> {:action add-to-token} :em-dash-end-or-running-dash
+      word-character -> {:emit word-and-dash, :action reset-token-with-input} :word
+      punctuation -> {:emit word-and-dash, :action reset-token-with-input} :punctuation
+      _ -> {:emit word-and-dash, :action reset-token} :whitespace]
      [:punctuation
       word-character -> {:emit char-as-token} :word
-      whitespace -> {:emit current-token, :action reset-token} :whitespace
       punctuation -> {:emit current-token, :action reset-token-with-input} :punctuation
-      _ -> :whitespace]]))
+      _ -> {:emit current-token, :action reset-token} :whitespace]]))
 
 (defn tokenize
   [input]
