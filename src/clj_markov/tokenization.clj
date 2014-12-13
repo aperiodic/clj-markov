@@ -90,7 +90,7 @@
       punctuation -> {:emit word-and-dash, :action reset-token-with-input} :punctuation
       _ -> {:emit word-and-dash, :action reset-token} :whitespace]
      [:punctuation
-      word-character -> {:emit char-as-token} :word
+      word-character -> {:emit current-token, :action reset-token-with-input} :word
       punctuation -> {:emit current-token, :action reset-token-with-input} :punctuation
       _ -> {:emit current-token, :action reset-token} :whitespace]]))
 

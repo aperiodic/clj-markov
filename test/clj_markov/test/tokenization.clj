@@ -86,6 +86,11 @@
         (is (= ["foo" "'" "," "`" "!"]
                (tokenize input)))))
 
+    (testing "tokenizes punctuation marks surrounded by word characters as their own token"
+      (let [input "in an [auth.conf][authconf]: for example"]
+        (is (= ["in" "an" "[" "auth" "." "conf" "]" "[" "authconf" "]" ":" "for" "example"]
+               (tokenize input)))))
+
     (testing "tokenizes standalone long dashes as a single token"
       (let [input "foo --- bar"]
         (is (= ["foo" "---" "bar"]
