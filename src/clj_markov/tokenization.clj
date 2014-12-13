@@ -42,7 +42,7 @@
 ;;
 
 (def word-character #"[a-zA-Z0-9-_]")
-(def punctuation #"['\",.:;!?\[\]\{\}\(\)]")
+(def punctuation #"['`\",.:;!?\[\]\{\}\(\)]")
 (def whitespace #"(?m)\s")
 
 (def reset-token (constantly nil))

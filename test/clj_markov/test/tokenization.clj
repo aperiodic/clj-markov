@@ -31,6 +31,7 @@
       (is (not (word-character? ".9")))
 
       (is (punctuation? \'))
+      (is (punctuation? \`))
       (is (punctuation? \"))
       (is (punctuation? \!))
       (is (punctuation? \?))
