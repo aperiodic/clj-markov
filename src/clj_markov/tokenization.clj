@@ -92,10 +92,11 @@
 
 (defn tokenize
   [input]
-  (-> (if-not (re-find whitespace (-> (last input) str))
-        (token-machine (str input " "))
-        (token-machine input))
-    flatten))
+  (let [input (if-not (re-find whitespace (-> (last input) str))
+                (str input " ")
+                input)]
+    (-> (token-machine input)
+      flatten)))
 
 (defn tokenize-file
   [filename]
