@@ -54,12 +54,13 @@
 
 (defn word-and-apostrophe
   [both _]
-  (let [[_ word apostrophe] (re-find #"([a-zA-Z0-9-_]+)(')" both)]
-    (keep identity [word apostrophe])))
+  (let [[_ word apostrophe] (re-find #"([a-zA-Z0-9-_]*)(')" both)]
+    (filter (comp not empty?) [word apostrophe])))
 
 (defn word-and-dash
   [word-w-dash _]
-  [(re-find #"[a-zA-Z0-9_]+" word-w-dash) "--"])
+  (let [[_ word dash] (re-find #"([a-zA-Z0-9_]*)([-]*)" word-w-dash)]
+    (filter (comp not empty?) [word dash])))
 
 (def ^:private token-machine
   (fsm-seq
