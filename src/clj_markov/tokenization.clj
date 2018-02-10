@@ -1,5 +1,6 @@
 (ns clj-markov.tokenization
   (:require [clojure.core.match :as match]
+            [clojure.string :as str]
             [clojure.walk :refer [postwalk]]
             [reduce-fsm :as fsm :refer [defsm-seq]]))
 
@@ -96,12 +97,16 @@
 
 (defn tokenize
   [input]
-  (let [input (if-not (re-find whitespace (-> (last input) str))
+  #_(let [input (if-not (re-find whitespace (-> (last input) str))
                 (str input " ")
                 input)]
     (-> (token-machine input)
-      flatten)))
+      flatten))
+  (->> (seq input)
+    (map str)))
 
 (defn tokenize-file
   [filename]
-  (tokenize (slurp filename)))
+  (tokenize (-> (slurp filename)
+              str/lower-case
+              (str/replace "\n" " "))))
