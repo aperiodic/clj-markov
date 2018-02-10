@@ -8,15 +8,14 @@ Clone this repo and fire up a repl.
 
 In the repl, enter:
 ```clj
-(in-ns 'clj-markov.repl)
+(require '[clj-markov.repl :refer :all])
 ```
 
-In this namespace, four functions are referred:
-
-  * `tokenize-file`, which, given a path to a file, returns a sequence of the tokens in that file, which can be used to train a markov chain.
+This brings in the following four functions:
+  * `tokenize-file`, which given a path to a file, returns a sequence of the tokens in that file, which can be used to train a markov chain.
   * `new-chain`, which generates a blank Markov chain of the given length (which defaults to two if not specified).
-  * `train`, which, given a Markov chain and a sequence of tokens, returns the chain after training on those tokens.
-  * `generate`, which, given a Markov chain and a positive integer, produces that many tokens using the Markov chain.
+  * `train`, which given a Markov chain and a sequence of tokens, returns the chain after training on those tokens.
+  * `generate`, which given a Markov chain and a positive integer, produces that many tokens using the Markov chain.
 
 Typically, for a particular text, one will define a var that holds that text's tokens.
 For example:
